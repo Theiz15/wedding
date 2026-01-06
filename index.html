@@ -16,7 +16,7 @@
   <meta name="author" content="CineLove" data-next-head="" />
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     data-next-head="" />
-  <link rel="icon" href="https://cinelove.me/favicon.ico" data-next-head="" />
+  <!-- <link rel="icon" href="https://cinelove.me/favicon.ico" data-next-head="" /> -->
   <title data-next-head="">Việt Hoàng & Thảo Uyên</title>
   <meta name="robots" content="index,follow" data-next-head="" />
   <!-- Tiêu đề hiển thị trên Facebook/Zalo -->
@@ -31,7 +31,7 @@
   <meta property="og:image" content="./assets/images/img/thiep.jpg" data-next-head="" />
   <meta property="og:title" content="Việt Hoàng & Thảo Uyên" data-next-head="" />
   <meta property="og:description" content="Việt Hoàng & Thảo Uyên" data-next-head="" />
-  <meta property="og:url" content="https://cinelove.me/template/thiep-cuoi-48" data-next-head="" />
+  <!-- <meta property="og:url" content="https://cinelove.me/template/thiep-cuoi-48" data-next-head="" /> -->
   <meta property="og:type" content="website" data-next-head="" />
   <meta property="og:image"
     content="templates/assets/77a0f81e-67af-4f30-91b6-73c5e5ce6aea/f3535e6f-3a2c-467f-a6a2-b2291f3561f0.png"
@@ -40,11 +40,11 @@
   <meta property="og:image:width" content="1200" data-next-head="" />
   <meta property="og:image:height" content="630" data-next-head="" />
   <meta property="og:site_name" content="CineLove" data-next-head="" />
-  <link rel="canonical" href="https://cinelove.me/template/thiep-cuoi-48" data-next-head="" />
+  <!-- <link rel="canonical" href="https://cinelove.me/template/thiep-cuoi-48" data-next-head="" /> -->
   <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png" />
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="./favicon.png" />
-  <link rel="manifest" href="https://cinelove.me/site.webmanifest" />
+  <!-- <link rel="manifest" href="https://cinelove.me/site.webmanifest" /> -->
   <meta name="msapplication-TileColor" content="#da532c" />
   <meta name="theme-color" content="#ffffff" />
   <link rel="preload" href="./_next/static/css/98561710b8d93e407683.css?dpl=dpl_8pPFqJ2KsixweaET5bkbGo58ZUAW"
@@ -262,7 +262,7 @@
     }
 
     [data-node-id="bfyDQi7WaX"] .photo-bg-wrap {
-      background-image: url("./assets/images/img/14.jpg") !important;
+      background-image: url("./assets/images/img/14ng.png") !important;
     }
 
     [data-node-id="6YpQnb-vcN"] .photo-bg-wrap {
@@ -6149,9 +6149,15 @@
     // ==========================================
     const CONFIG = {
       weddingDate: new Date(2026, 0, 24, 11, 0, 0).getTime(), // 24/01/2026 11:00 AM
-      googleMapsURL: "https://maps.app.goo.gl/4zNyP3dt1wqgc6YE8",
-      rsvpEndpoint: "https://formspree.io/f/xwvpzrpk"
+      googleMapsURL: "https://maps.app.goo.gl/zo7jLMkbFGnuKhzB8",
+      rsvpEndpoint: "https://formspree.io/f/xwvpzrpk",
+      qrCodeImageURL: "./assets/images/img/qr_nhatrai.jpg",
+      telegramBotToken: "8473681315:AAGd8yP36NNpNgrxu7hTil_qS8SuVjhcDeU",
+      telegramChatId: "5237204162"
     };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const guestNameFromUrl = urlParams.get('kinhmoi') ? decodeURIComponent(urlParams.get('kinhmoi')) : "";
 
     const textData = {
       "ZJ2fiWLKI1": "Việt Hoàng",
@@ -6161,7 +6167,7 @@
       "Mv1w2ApCo_": "Thảo Uyên",
       "0AGIWVlwUg": "Tỉnh. Nghệ An",
       "CGyUmyvyP0": "Tỉnh. Điện Biên",
-      "8R3cgDRX8l": "Quý Khách",
+      "8R3cgDRX8l": guestNameFromUrl ? guestNameFromUrl : "Quý Khách",
       "OvZuKQod5_": "Ông: Trần Văn Hương <br> Bà: Nguyễn Thị Hằng",
       "uaoSRch0Zt": "Ông: Hoàng Minh Kỳ <br> Bà: Nguyễn Thị Khanh",
       "TNE6oCylda": "Thôn 3 - Xã Quỳnh Phú - Nghệ An",
@@ -6172,6 +6178,22 @@
       "55OXnoIy7E": "NĂM 2026",
       "JFycOGOdPs": "(Tức ngày 06 tháng 12 năm Ất Tỵ)",
     };
+
+    // 2. HÀM GỬI TELEGRAM
+    // ==========================================
+    async function sendTelegramMessage(message) {
+      const url = `https://api.telegram.org/bot${CONFIG.telegramBotToken}/sendMessage`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: CONFIG.telegramChatId,
+          text: message,
+          parse_mode: "HTML"
+        })
+      });
+      return response.ok;
+    }
 
     // ==========================================
     // 2. CSS "IMPORTANT" ĐỂ ĐÈ HỆ THỐNG (Chạy 1 lần)
@@ -6217,6 +6239,27 @@
       document.head.appendChild(styleSheet);
     };
 
+    function initQRModal() {
+      if (document.getElementById('qr-modal-container')) return;
+      const modalHTML = `
+            <div id="qr-modal-container" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999999; align-items:center; justify-content:center; cursor:pointer;">
+                <div style="background:#fff; padding:20px; border-radius:15px; position:relative; max-width:90%; text-align:center; cursor:default;">
+                    <span id="close-qr" style="position:absolute; top:-15px; right:-15px; background:#fff; width:30px; height:30px; border-radius:50%; line-height:30px; font-weight:bold; font-size:20px; box-shadow:0 0 10px rgba(0,0,0,0.5); cursor:pointer;">&times;</span>
+                    <h3 style="margin-top:0; color:#4b5320; font-family:Arial;">Mừng cưới đến chú rể & cô dâu</h3>
+                    <img src="${CONFIG.qrCodeImageURL}" style="width:100%; max-width:300px; border-radius:10px; margin:10px 0;">
+                    <p style="font-size:14px; color:#666; font-family:Arial;">Cảm ơn bạn đã chung vui cùng chúng mình!</p>
+                </div>
+            </div>
+        `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+      // Đóng modal khi nhấn nút hoặc nhấn ra ngoài
+      document.getElementById('qr-modal-container').onclick = function () { this.style.display = 'none'; };
+      document.getElementById('close-qr').onclick = function () { document.getElementById('qr-modal-container').style.display = 'none'; };
+    }
+
+
+
     // ==========================================
     // 3. HÀM XỬ LÝ CHÍNH (GHI ĐÈ DỮ LIỆU)
     // ==========================================
@@ -6239,6 +6282,16 @@
           day.classList.remove('force-heart-24');
         }
       });
+
+      // C. SỰ KIỆN CLICK HỘP QUÀ HIỆN QR
+      const giftBox = document.querySelector('[data-node-id="xpY8BPcCJh"]');
+      if (giftBox) {
+        giftBox.style.cursor = "pointer";
+        giftBox.onclick = function (e) {
+          e.preventDefault(); e.stopPropagation();
+          document.getElementById('qr-modal-container').style.display = 'flex';
+        };
+      }
 
 
       // D. Cập nhật Đếm ngược (Countdown)
@@ -6269,66 +6322,90 @@
         };
       }
 
-      // E. FIX FORM XÁC NHẬN THAM DỰ (Bản nâng cấp: Báo lỗi tại chỗ + Tự động 0 khách)
+      // const nameInput = document.querySelector('.rsvp-form [name="rsvp-name"]');
+      // if (nameInput && guestNameFromUrl && !nameInput.dataset.autofilled) {
+      //   nameInput.value = guestNameFromUrl;
+      //   nameInput.dataset.autofilled = "true"; // Đảm bảo chỉ điền 1 lần
+      //   // Kích hoạt sự kiện để React/Hệ thống nhận diện thay đổi
+      //   nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+      //   cónsole.log("Autofilled name:", guestNameFromUrl);
+      // }
+
+      const nameInput = document.querySelector('input[name="rsvp-name"]');
+
+      if (nameInput && guestNameFromUrl) {
+        // Chỉ tự động điền nếu khách KHÔNG đang trực tiếp gõ vào ô Tên này
+        if (document.activeElement !== nameInput) {
+
+          // Nếu giá trị hiện tại bị trống hoặc bị React reset về mặc định
+          if (nameInput.value !== guestNameFromUrl && !nameInput.dataset.userModifiedManually) {
+
+            // Kỹ thuật Ép giá trị vào nhân xử lý (Bypass React State)
+            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+            nativeInputValueSetter.call(nameInput, guestNameFromUrl);
+
+            // Kích hoạt chuỗi sự kiện để báo cho hệ thống lưu lại
+            nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+            nameInput.dispatchEvent(new Event('change', { bubbles: true }));
+
+            if (nameInput.dataset.lastLog !== guestNameFromUrl) {
+              nameInput.dataset.lastLog = guestNameFromUrl;
+            }
+          }
+        }
+
+        // Lắng nghe xem khách có thực sự muốn đổi tên khác không
+        if (!nameInput.dataset.hasControl) {
+          nameInput.addEventListener('keydown', () => {
+            // Nếu khách thực sự gõ phím vào ô này, chúng ta ngừng ghi đè
+            nameInput.dataset.userModifiedManually = "true";
+          });
+          nameInput.dataset.hasControl = "true";
+        }
+      }
+
+
+
+
+      // E. FIX FORM XÁC NHẬN & GỬI TELEGRAM
       const rsvpContainer = document.querySelector('.rsvp-form');
       const rsvpForm = document.querySelector('.rsvp-form form');
 
       if (rsvpForm && !rsvpForm.dataset.hooked) {
         rsvpForm.dataset.hooked = "true";
-
-        // 1. CHÈN THẺ BÁO LỖI VÀO GIAO DIỆN (Nếu chưa có)
-        const nameInput = rsvpForm.querySelector('[name="rsvp-name"]');
-        if (nameInput && !document.getElementById('name-error-msg')) {
-          nameInput.insertAdjacentHTML('afterend', `
-                    <div id="name-error-msg" style="color: #d32f2f; font-size: 12px; margin-top: 4px; display: none; text-align: left; width: 100%;">
-                        ⚠️ Vui lòng nhập Họ và tên của bạn
-                    </div>
-                `);
-        }
+        const nameInputInner = document.querySelector('.rsvp-form [name="rsvp-name"]');
+        // Chèn báo lỗi ẩn
+        nameInputInner.insertAdjacentHTML('afterend', `<div id="name-error-msg" style="color:#d32f2f; font-size:12px; margin-top:4px; display:none; text-align:left;">⚠️ Vui lòng nhập tên</div>`);
 
         rsvpForm.onsubmit = async function (e) {
           e.preventDefault();
           e.stopPropagation();
 
-          const guestName = nameInput.value.trim();
-          const errorMsg = document.getElementById('name-error-msg');
-
-          // 2. RÀNG BUỘC: Kiểm tra tên trống
+          const guestName = nameInputInner.value.trim();
           if (guestName === "") {
-            errorMsg.style.display = "block"; // Hiện dòng chữ báo lỗi
-            nameInput.style.borderColor = "#d32f2f"; // Đổi viền ô thành màu đỏ
-            nameInput.focus();
-            return;
-          } else {
-            errorMsg.style.display = "none"; // Ẩn lỗi nếu đã nhập
-            nameInput.style.borderColor = "#e0e0e0";
+            document.getElementById('name-error-msg').style.display = "block";
+            nameInputInner.focus(); return;
           }
 
           const submitBtn = rsvpForm.querySelector('button[type="submit"]');
           const isAttending = rsvpForm.querySelector('[name="rsvp-attendance"]:checked')?.value === 'yes';
+          // const side = document.getElementById('guest-side').value;
+          const count = isAttending ? document.getElementById('rsvp-attendee-count').value : "0";
 
-          // 3. LOGIC: Nếu không tham dự thì mặc định gửi về 0
-          const guestCount = isAttending ? document.getElementById('rsvp-attendee-count').value : "0";
-
-          submitBtn.innerText = "Đang kiểm tra...";
+          submitBtn.innerText = "Đang gửi...";
           submitBtn.disabled = true;
 
-          const formData = {
-            "Họ và Tên": guestName,
-            "Trạng thái": isAttending ? 'Tham dự' : 'Không tham dự',
-            "Số lượng người": guestCount
-          };
+          // Tạo nội dung tin nhắn gửi về Telegram
+          const message = `<b>🔔 CÓ XÁC NHẬN MỚI</b>\n\n` +
+            `👤 <b>Khách:</b> ${guestName}\n` +
+            `🤝 <b>Phía: Nhà Trai</b>\n` +
+            `✅ <b>Trạng thái:</b> ${isAttending ? "Sẽ tham dự" : "Rất tiếc, tôi bận"}\n` +
+            `👥 <b>Số lượng:</b> ${count} người`;
 
-          try {
-            const response = await fetch(CONFIG.rsvpEndpoint, {
-              method: 'POST',
-              body: JSON.stringify(formData),
-              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
-            });
+          const success = await sendTelegramMessage(message);
 
-            if (response.ok) {
-              // HIỂN THỊ GIAO DIỆN TÍCH XANH THÀNH CÔNG
-              rsvpContainer.innerHTML = `
+          if (success) {
+            rsvpContainer.innerHTML = `
                             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 380px; text-align: center; gap: 15px; padding: 20px; animation: fadeIn 0.5s ease;">
                                 <h3 style="color:#4b5320; font-weight:bold; font-size:19px; margin-bottom: 10px;">Xác nhận tham dự</h3>
                                 <div style="width: 85px; height: 85px; border-radius: 50%; border: 4px solid #4CAF50; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
@@ -6340,13 +6417,8 @@
                                 <p style="color: #666; font-size: 14px; line-height: 1.5;">Thông tin của bạn đã được gửi tới <br> cô dâu & chú rể.</p>
                             </div>
                         `;
-            } else {
-              alert("Gửi lỗi, vui lòng thử lại.");
-              submitBtn.innerText = "Gửi lại";
-              submitBtn.disabled = false;
-            }
-          } catch (err) {
-            alert("Lỗi kết nối mạng.");
+          } else {
+            alert("Có lỗi khi gửi tin nhắn. Vui lòng thử lại!");
             submitBtn.innerText = "Gửi lại";
             submitBtn.disabled = false;
           }
@@ -6355,6 +6427,7 @@
     }
 
     injectStyles();
+    initQRModal();
     setInterval(overrideWeddingInfo, 500); 
   </script>
 </body>
