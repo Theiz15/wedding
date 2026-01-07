@@ -207,7 +207,7 @@
     defer=""></script>
   <style id="__jsx-3522513885">
     [data-node-id="rsvOw_oKRb"] .photo-bg-wrap {
-      background-image: url("./assets/images/img/15ngang.png") !important;
+      background-image: url("./assets/images/img/8ng.png") !important;
     }
 
     [data-node-id="TasqC-oNP2"] .photo-bg-wrap {
@@ -231,7 +231,7 @@
     }
 
     [data-node-id="fS50XkKgDV"] .photo-bg-wrap {
-      background-image: url("./assets/images/img/8ng.png") !important;
+      background-image: url("./assets/images/img/14ng.png") !important;
     }
 
 
@@ -257,7 +257,7 @@
     }
 
     [data-node-id="bfyDQi7WaX"] .photo-bg-wrap {
-      background-image: url("./assets/images/img/14ng.png") !important;
+      background-image: url("./assets/images/img/15ngang.png") !important;
     }
 
     [data-node-id="6YpQnb-vcN"] .photo-bg-wrap {
@@ -5067,7 +5067,7 @@
                               style="height:auto;width:100%;min-width:20px;color:#4b5320;font-size:19px;text-shadow:0px 0px 2px rgba(0,0,0,0);font-weight:500;font-family:&quot;Quicksand&quot;;text-align:center;line-height:1.82;letter-spacing:0px;text-transform:none;text-decoration:none;font-style:normal;pointer-events:none;overflow:hidden;word-break:break-word"
                               contentEditable="false">Mọi thứ bắt đầu từ một lời chào giản đơn, nhưng đã thay đổi cả
                               cuộc đời chúng tôi.&nbsp;<div>Qua những khoảnh khắc cười đùa, những buổi tối ấm áp bên
-                                nhau, chúng tôi đã cùng nhau lớn lên, học hỏi và yêu thương.&nbsp;</div>
+                                nhau, chúng tôi đã cùng nhau học hỏi và yêu thương.&nbsp;</div>
                               <div>Hôm nay, chúng tôi hân hoan chia sẻ hành trình này với những người thân yêu, và mong
                                 chờ được cùng các bạn ăn mừng tình yêu của chúng tôi.</div>
                             </div>
@@ -6124,10 +6124,11 @@
     const CONFIG = {
       weddingDate: new Date(2026, 0, 24, 11, 0, 0).getTime(), // 24/01/2026 11:00 AM
       googleMapsURL: "https://maps.app.goo.gl/zo7jLMkbFGnuKhzB8",
-      rsvpEndpoint: "https://formspree.io/f/xwvpzrpk",
       qrCodeImageURL: "./assets/images/img/qr_nhatrai.jpg",
       telegramBotToken: "8473681315:AAGd8yP36NNpNgrxu7hTil_qS8SuVjhcDeU",
-      telegramChatId: "5237204162"
+      telegramChatId: "5237204162",
+
+      musicURL: "./assets/audio/1doi.mp3",
     };
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -6141,11 +6142,12 @@
       "Mv1w2ApCo_": "Thảo Uyên",
       "0AGIWVlwUg": "Tỉnh. Nghệ An",
       "CGyUmyvyP0": "Tỉnh. Điện Biên",
-      "Jcke5MC9Yc": "10:30 <br> Checkin",
+      "in3mT6yPnO": "Mọi thứ bắt đầu từ một lời chào giản đơn, nhưng đã thay đổi cả cuộc đời chúng tôi.&nbsp;<div>Qua những khoảnh khắc cười đùa, những buổi tối ấm áp bên nhau, chúng tôi đã cùng nhau học hỏi và yêu thương.&nbsp;</div><div>Hôm nay, chúng tôi hân hoan chia sẻ hành trình này với những người thân yêu, và mong chờ được cùng các bạn ăn mừng tình yêu của chúng tôi.",
+      "Jcke5MC9Yc": "09:30 <br> Checkin",
       "4kNEMlNi-7": "11:30 <br> Lễ Thành Hôn",
       "8R3cgDRX8l": guestNameFromUrl ? guestNameFromUrl : "Quý Khách",
       "OvZuKQod5_": "Ông: Trần Văn Hương <br> Bà: Nguyễn Thị Hằng",
-      "uaoSRch0Zt": "Ông: Hoàng Minh Kỳ <br> Bà: Nguyễn Thị Khanh",
+      "uaoSRch0Zt": "Ông: Hoàng Minh Kỷ <br> Bà: Nguyễn Thị Khanh",
       "TNE6oCylda": "Thôn 3 - Xã Quỳnh Phú - Nghệ An",
       "WK9uKUZ1As": "Tháng 01",
       "KJjUPoouo_": "11 : 00 , THỨ BẢY",
@@ -6225,12 +6227,78 @@
       document.head.appendChild(styleSheet);
     };
 
+    let weddingAudio = new Audio();
+    weddingAudio.src = CONFIG.musicURL;
+    weddingAudio.loop = true;
+    let isMusicStarted = false;
 
+    function playMyMusic() {
+      // 1. Tìm và tiêu diệt tất cả các thẻ audio khác của hệ thống
+      const allOldAudios = document.querySelectorAll('audio');
+      allOldAudios.forEach(audio => {
+        if (audio.src !== weddingAudio.src) {
+          audio.pause();
+          audio.src = "";
+          audio.load();
+          audio.remove();
+        }
+      });
 
+      // 2. Phát nhạc của mình
+      weddingAudio.play().then(() => {
+        isMusicStarted = true;
+        updateMusicUI(true);
+      }).catch(e => console.log("Chờ tương tác để phát nhạc..."));
+    }
 
-    // ==========================================
-    // 3. HÀM XỬ LÝ CHÍNH (GHI ĐÈ DỮ LIỆU)
-    // ==========================================
+    function toggleMusic() {
+      if (weddingAudio.paused) {
+        playMyMusic();
+      } else {
+        weddingAudio.pause();
+        updateMusicUI(false);
+      }
+    }
+
+    function updateMusicUI(isPlaying) {
+      const discIcon = document.querySelector('.audio-toggle');
+      const cancelLine = document.querySelector('.icon-cancel');
+      if (discIcon) {
+        if (isPlaying) {
+          discIcon.classList.add('mrotate');
+          if (cancelLine) cancelLine.style.display = 'none';
+        } else {
+          discIcon.classList.remove('mrotate');
+          if (cancelLine) cancelLine.style.display = 'block';
+        }
+      }
+    }
+
+    // Lắng nghe click vào nút đĩa nhạc của hệ thống để chiếm quyền
+    document.addEventListener('click', function (e) {
+      const controlWrapper = e.target.closest('#audio-control-wrapper');
+      if (controlWrapper) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleMusic();
+      } else if (!isMusicStarted) {
+        // Nếu chưa phát nhạc, click bất cứ đâu cũng sẽ phát
+        playMyMusic();
+      }
+    }, true);
+
+    // Tự động quét để tắt nhạc hệ thống nếu nó tự phát lại
+    setInterval(() => {
+      const systemAudios = document.querySelectorAll('audio');
+      systemAudios.forEach(a => {
+        if (!a.src.includes('1doi.mp3') && !a.paused) {
+          a.pause();
+          a.remove();
+          if (!isMusicStarted) playMyMusic();
+        }
+      });
+    }, 1000);
+
     function overrideWeddingInfo() {
       document.title = "Lễ Thành Hôn: Việt Hoàng & Thảo Uyên";
       // A. Cập nhật Text nội dung
